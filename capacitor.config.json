@@ -2,5 +2,12 @@
   "appId": "de.straub.dienste",
   "appName": "Dienstplan",
   "webDir": "www",
-  "android": { "backgroundColor": "#11161c" }
+  "android": {
+    "backgroundColor": "#11161c"
+  },
+  "server": {
+    "allowNavigation": [
+      "stefan-33.github.io"
+    ]
+  }
 }

@@ -199,6 +199,8 @@ const PLAN=`01.11.2026 X
 30.12.2026 AG Ausgleich für 05.12.
 31.12.2026 FTG`;
 const STAND_ISO="2026-11-11";
+const APP_VERSION="202611151456";
+const SITE_URL="https://stefan-33.github.io/stefans-dienste/";
 const KIND={X:["free","Frei"],AG:["free","Ausgleich"],TU:["vac","Urlaub"],FTG:["hol","Feiertag"],K:["free","Frei"]};
 const MON=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
 const WD=["So","Mo","Di","Mi","Do","Fr","Sa"],WDL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
@@ -226,6 +228,8 @@ load(PLAN);setStand("11.11.2026");
 try{const c=JSON.parse(localStorage.getItem("plan-cache")||"null");if(c&&c.plan&&c.stand>=STAND_ISO){load(c.plan);setStand(c.standText)}}catch(e){}
 async function refresh(){
   try{const r=await fetch(PLAN_URL+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
+    /* App (APK): neueres Design online? Dann die aktuelle Web-Version laden */
+    if(window.Capacitor&&j.appVersion&&j.appVersion>APP_VERSION&&location.href.indexOf(SITE_URL)!==0){location.replace(SITE_URL+"?app=1");return}
     if(!j.plan)return;load(j.plan);setStand(j.standText);render();
     try{localStorage.setItem("plan-cache",JSON.stringify(j))}catch(e){}
   }catch(e){}
