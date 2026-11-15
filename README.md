@@ -1,4 +1,4 @@
-# Stefans Dienste
+# Dienstplan
 
 Stefans Dienstzeiten (Spalte Straub, Dienstplan Zentrale) zum Anschauen – für Sabrina.
 

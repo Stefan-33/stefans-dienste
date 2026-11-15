@@ -4,7 +4,7 @@ name: Android-App bauen
 on:
   push:
     branches: [main]
-    paths: ["www/index.html", "capacitor.config.json", "package.json", "assets/**", ".github/workflows/apk.yml"]
+    paths: ["www/index.html", "capacitor.config.json", "package.json", "assets/**", "signing/**", ".github/workflows/apk.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
       - run: npm install
+      - name: Fester Signatur-Schlüssel (damit Updates sich drüberinstallieren lassen)
+        run: mkdir -p ~/.android && cp signing/debug.keystore ~/.android/debug.keystore
       - run: npx cap add android
       - name: App-Icon erzeugen
         run: npx @capacitor/assets generate --android --iconBackgroundColor '#d9480f' --splashBackgroundColor '#11161c'
@@ -31,7 +33,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: app
-          name: Stefans Dienste – Android-App
+          name: Dienstplan – Android-App
           body: "Installieren: Stefans-Dienste.apk auf dem Handy öffnen. Der Dienstplan aktualisiert sich danach von selbst."
           make_latest: true
           files: Stefans-Dienste.apk

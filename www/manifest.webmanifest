@@ -1,6 +1,6 @@
 {
- "name": "Stefans Dienste",
- "short_name": "Dienste",
+ "name": "Dienstplan",
+ "short_name": "Dienstplan",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
