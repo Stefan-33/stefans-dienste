@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#17212b">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Stefans Dienste">
+<title>Stefans Dienste</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d9480f'/%3E%3Ctext x='32' y='44' font-family='Arial' font-weight='700' font-size='34' text-anchor='middle' fill='white'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: eine Spalte – Heute/Morgen gross, darunter Wochenliste, unten Monatsübersicht */
+:root{
+  --bg:#eef1f4;--surface:#fff;--surface2:#e3e8ee;--line:#cfd6de;--fg:#17212b;--muted:#5b6876;
+  --work:#d9480f;--free:#2b8a3e;--vac:#ae3ec9;--hol:#c2255c;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#11161c;--surface:#19212a;--surface2:#222c37;--line:#2e3a47;--fg:#e6ebf0;--muted:#93a1b0;
+  --work:#ff7a3d;--free:#5cc274;--vac:#d07be0;--hol:#f06595;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 var(--body);
+  padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px;padding-top:18px}
+h1,h2{font-family:var(--display);font-weight:700;margin:0;letter-spacing:.01em}
+h1{font-size:32px;line-height:1}
+h2{font-size:22px}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.stand{font-size:12.5px;color:var(--muted)}
+
+.now{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big{border-radius:12px;padding:14px;color:#fff;display:flex;flex-direction:column;gap:2px;min-width:0}
+.big .lbl{color:rgba(255,255,255,.85)}
+.big .t{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.05}
+.big .s{font-size:13px;opacity:.92;overflow-wrap:anywhere}
+.big.work{background:#c43d08}.big.free{background:#2b8a3e}.big.vac{background:#9c36b5}.big.hol{background:#a61e4d}.big.none{background:#5b6876}
+@media (max-width:360px){.now{grid-template-columns:1fr}}
+
+.seg{display:flex;gap:6px;background:var(--surface2);padding:4px;border-radius:10px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font:600 14px var(--body);padding:8px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+button:focus-visible{outline:2px solid var(--work);outline-offset:2px}
+
+.week{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.wh{display:flex;justify-content:space-between;align-items:baseline;padding:10px 14px;background:var(--surface2)}
+.day{display:grid;grid-template-columns:48px 1fr;gap:12px;padding:11px 14px;border-top:1px solid var(--line);align-items:center}
+.day.today{background:color-mix(in srgb,var(--work) 9%,var(--surface))}
+.day .d{text-align:center;font-family:var(--display);line-height:1}
+.day .d b{display:block;font-size:24px}
+.day .d span{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600}
+.day.today .d span{color:var(--work)}
+.state{display:flex;align-items:center;gap:8px;font-weight:600;min-width:0}
+.state .tm{font-family:var(--mono);font-weight:500;font-size:15px}
+.dot{flex:0 0 auto;width:10px;height:10px;border-radius:50%}
+.work .dot{background:var(--work)}.free .dot{background:var(--free)}.vac .dot{background:var(--vac)}.hol .dot{background:var(--hol)}
+.free .state,.vac .state,.hol .state{color:var(--muted)}
+.ev{font-size:13px;color:var(--muted);margin-top:1px;overflow-wrap:anywhere}
+.tag{font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--surface2);color:var(--muted)}
+
+.month{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-top:8px}
+.wd{text-align:center;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase}
+.c{border-radius:6px;min-height:52px;padding:3px 1px;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface2);min-width:0}
+.c.out{background:transparent}
+.c .n{font-size:11px;font-weight:600}
+.c.today{outline:2px solid var(--fg)}
+.c .p{width:calc(100% - 4px);border-radius:4px;text-align:center;font-family:var(--mono);font-size:9.5px;line-height:1.25;color:#fff;padding:1px 0;letter-spacing:-.03em}
+.c.work .p{background:#c43d08}.c.free .p{background:transparent;color:var(--free);font-family:var(--body);font-weight:600;font-size:10px}
+.c.vac .p{background:#9c36b5;font-family:var(--body);font-size:9.5px}.c.hol .p{background:#a61e4d;font-family:var(--body);font-size:9.5px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.empty{padding:16px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="lbl">Für Sabrina</div>
+    <h1>Stefans Dienste</h1>
+    <div class="stand">Stand des Dienstplans: <span class="num" id="stand">11.11.2026</span></div>
+  </header>
+  <section class="now" id="now" aria-label="Heute und morgen"></section>
+  <div class="seg" role="group" aria-label="Ansicht">
+    <button id="b-list" aria-pressed="true">Wochen</button>
+    <button id="b-month" aria-pressed="false">Monat</button>
+  </div>
+  <main id="main"></main>
+  <div class="legend"><span><i class="dot" style="background:var(--work)"></i>Arbeitet</span><span><i class="dot" style="background:var(--free)"></i>Frei</span><span><i class="dot" style="background:var(--vac)"></i>Urlaub</span><span><i class="dot" style="background:var(--hol)"></i>Feiertag</span></div>
+</div>
+<script>
+const PLAN=`01.11.2026 X
+02.11.2026 07:00-17:00
+03.11.2026 07:00-17:00
+04.11.2026 07:00-17:00
+05.11.2026 07:00-17:00 Kronenkreuzverleihung
+06.11.2026 07:00-13:00 HRW · Herbstkonzert Zupfer
+07.11.2026 16:30-02:00 Jubilarfeier Siemens · Herbstkonzert Zupfer
+08.11.2026 X
+09.11.2026 AG Ausgleich für 07.11. · E.ON
+10.11.2026 06:45-12:45 E.ON
+11.11.2026 11:00-17:00
+12.11.2026 TU
+13.11.2026 07:00-15:00 Candlelight
+14.11.2026 X
+15.11.2026 X
+16.11.2026 07:00-13:00 Schattentheater
+17.11.2026 09:00-17:00 Aufbau Muschel 4
+18.11.2026 11:00-17:00 FoH auf Bühne
+19.11.2026 16:45-22:45 St. Marien Hospital
+20.11.2026 16:30-00:00 Sinfoniekonzert + Abbau Muschel 4
+21.11.2026 X
+22.11.2026 X
+23.11.2026 TU BHM IT Tag
+24.11.2026 07:00-18:00 Personalversammlung Mülheim
+25.11.2026 07:00-15:00 Jobcenter
+26.11.2026 07:00-13:00 Jobcenter
+27.11.2026 07:00-17:00
+28.11.2026 X
+29.11.2026 06:00-13:45 Kreativmarkt · Ruhrpreis · Candlelight
+30.11.2026 AG Ausgleich für 29.11. · AR-Sitzung MST
+01.12.2026 07:00-17:00
+02.12.2026 07:00-15:00 Netzwerktreffen medizinisch
+03.12.2026 12:30-18:30 Herbert Knebel
+04.12.2026 07:00-14:30 ABBA Dancing Queen · AR-Sitzung BHM
+05.12.2026 09:30-15:30 All I want for Christmas
+06.12.2026 X
+07.12.2026 12:00-18:00 Aufbau Mo-Torres
+08.12.2026 07:00-13:00 Mo-Torres
+09.12.2026 07:00-17:00
+10.12.2026 07:00-17:00 Hakuna Matata
+11.12.2026 TU
+12.12.2026 X
+13.12.2026 X
+14.12.2026 10:30-18:30 Rock Sympho Show · Aufbau CAR
+15.12.2026 07:00-15:00 Muschel 3 + Kinderkonzert · Siemens
+16.12.2026 07:00-15:00 Siemens · Abbau CAR
+17.12.2026 07:00-15:30 Aufbau Turck · Italian Swing
+18.12.2026 07:00-16:00 Mitsingkonzert · TURCK
+19.12.2026 16:30-01:30 Ute Lemper + Abbau · Candlelight
+20.12.2026 X
+21.12.2026 07:00-17:00
+22.12.2026 07:00-15:00 Nussknacker
+23.12.2026 10:00-18:30 Aufbau Folkwang
+24.12.2026 FTG
+25.12.2026 FTG
+26.12.2026 X
+27.12.2026 X
+28.12.2026 AG Ausgleich für 19.12.
+29.12.2026 AG Ausgleich für 12.12.
+30.12.2026 AG Ausgleich für 05.12.
+31.12.2026 FTG`;
+const STAND_ISO="2026-11-11";
+const KIND={X:["free","Frei"],AG:["free","Ausgleich"],TU:["vac","Urlaub"],FTG:["hol","Feiertag – frei"],K:["free","Frei"]};
+const MON=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+const WD=["So","Mo","Di","Mi","Do","Fr","Sa"],WDL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+const pad=n=>String(n).padStart(2,"0"),key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const hm=s=>s.replace(/^0(\d)/,"$1");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let days={},keys=[],first="",last="";
+function load(text){
+  const d={};
+  text.trim().split("\n").forEach(l=>{
+    const m=l.match(/^(\d{2})\.(\d{2})\.(\d{4})\s+(.*)$/);if(!m)return;
+    const k=`${m[3]}-${m[2]}-${m[1]}`;let r=m[4],e={};
+    const t=r.match(/^(\d{2}:\d{2})-(\d{2}:\d{2})\s*(.*)$/);
+    if(t)e={kind:"work",s:t[1],e:t[2],note:t[3].replace(/^(Ausgleich[^·]*)·?\s*/,"")};
+    else{const c=r.split(/\s+/)[0];const kd=KIND[c]||["free","Frei"];e={kind:kd[0],label:kd[1],code:c};if(c==="AG"){const n=r.slice(2).replace(/^\s*Ausgleich\s*/,"").split("·")[0].trim();if(n)e.note=n}}
+    d[k]=e;
+  });
+  days=d;keys=Object.keys(d).sort();first=keys[0]||"";last=keys[keys.length-1]||"";
+}
+/* Plan: eingebaute Kopie -> zuletzt geladener Stand -> frisch aus dem Netz */
+const PLAN_URL="https://stefan-33.github.io/stefans-dienste/plan.json";
+function setStand(st){document.getElementById("stand").textContent=st}
+load(PLAN);
+try{const c=JSON.parse(localStorage.getItem("plan-cache")||"null");if(c&&c.plan&&c.stand>=STAND_ISO){load(c.plan);setTimeout(()=>setStand(c.standText),0)}}catch(e){}
+async function refresh(){
+  try{const r=await fetch(PLAN_URL+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
+    if(!j.plan)return;load(j.plan);setStand(j.standText);render();
+    try{localStorage.setItem("plan-cache",JSON.stringify(j))}catch(e){}
+  }catch(e){}
+}
+function label(e){if(!e)return"Kein Plan";return e.kind==="work"?`${hm(e.s)}–${hm(e.e)}`:e.label}
+function overnight(e){return e&&e.kind==="work"&&e.e<e.s}
+
+function renderNow(){
+  const t=new Date(),m=new Date(t);m.setDate(t.getDate()+1);
+  const box=(d,title)=>{const e=days[key(d)];const cls=e?e.kind:"none";
+    let sub=e&&e.kind==="work"?(e.note?esc(e.note):"Dienst")+(overnight(e)&&e.e!=="00:00"?" · über Nacht":""):(e?"":"Noch kein Plan");
+    return`<div class="big ${cls}"><span class="lbl">${title} · ${WD[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.</span><span class="t ${e&&e.kind==="work"?"num":""}" style="${e&&e.kind==="work"?"font-family:var(--display)":""}">${esc(label(e))}</span><span class="s">${sub}</span></div>`};
+  document.getElementById("now").innerHTML=box(t,"Heute")+box(m,"Morgen");
+}
+function renderList(){
+  const t=new Date();t.setHours(0,0,0,0);const mon=new Date(t);mon.setDate(t.getDate()-((t.getDay()+6)%7));
+  let html="";
+  for(let w=0;w<8;w++){
+    const ws=new Date(mon);ws.setDate(mon.getDate()+w*7);const we=new Date(ws);we.setDate(ws.getDate()+6);
+    if(key(ws)>last)break;
+    const title=w===0?"Diese Woche":w===1?"Nächste Woche":`Woche ab ${ws.getDate()}. ${MON[ws.getMonth()]}`;
+    let rows="";
+    for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);if(d<t)continue;const k=key(d),e=days[k];
+      const cls=e?e.kind:"free",today=k===key(new Date());
+      rows+=`<div class="day ${cls} ${today?"today":""}"><div class="d"><b>${d.getDate()}</b><span>${today?"Heute":WD[d.getDay()]}</span></div>
+        <div style="min-width:0"><div class="state"><i class="dot"></i>${e&&e.kind==="work"?`<span class="tm">${hm(e.s)}–${hm(e.e)}</span>${overnight(e)?`<span class="tag">${e.e==="00:00"?"bis Mitternacht":"über Nacht"}</span>`:""}`:esc(e?e.label:"Kein Plan")}</div>
+        ${e&&e.note?`<div class="ev">${esc(e.note)}</div>`:""}</div></div>`}
+    if(rows)html+=`<section class="week"><div class="wh"><h2>${title}</h2><span class="stand num">${ws.getDate()}.${ws.getMonth()+1}.–${we.getDate()}.${we.getMonth()+1}.</span></div>${rows}</section>`;
+  }
+  return html||`<div class="empty">Für die nächsten Wochen ist noch kein Plan eingetragen.</div>`;
+}
+function renderMonths(){
+  const t=new Date();let html="";const start=new Date(t.getFullYear(),t.getMonth(),1);
+  for(let i=0;i<3;i++){const m=new Date(start.getFullYear(),start.getMonth()+i,1);if(key(m)>last)break;
+    const dim=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(),lead=(m.getDay()+6)%7;
+    let g=["Mo","Di","Mi","Do","Fr","Sa","So"].map(w=>`<div class="wd">${w}</div>`).join("");
+    for(let j=0;j<lead;j++)g+=`<div class="c out"></div>`;
+    for(let d=1;d<=dim;d++){const dt=new Date(m.getFullYear(),m.getMonth(),d),k=key(dt),e=days[k];
+      const p=!e?"":e.kind==="work"?`${hm(e.s)}<br>${hm(e.e)}`:e.kind==="vac"?"Url.":e.kind==="hol"?"FT":e.code==="AG"?"Ausgl.":"frei";
+      g+=`<div class="c ${e?e.kind:""} ${k===key(t)?"today":""}" title="${esc(e?(label(e)+(e.note?" · "+e.note:"")):"")}"><span class="n">${d}</span>${p?`<span class="p">${p}</span>`:""}</div>`}
+    html+=`<section class="month"><h2>${MON[m.getMonth()]} ${m.getFullYear()}</h2><div class="grid">${g}</div></section>`;
+  }
+  return html;
+}
+let view="list";
+function render(){renderNow();document.getElementById("main").innerHTML=`<div style="display:flex;flex-direction:column;gap:12px">${view==="list"?renderList():renderMonths()}</div>`;
+  document.getElementById("b-list").setAttribute("aria-pressed",view==="list");document.getElementById("b-month").setAttribute("aria-pressed",view==="month")}
+document.getElementById("b-list").onclick=()=>{view="list";render()};
+document.getElementById("b-month").onclick=()=>{view="month";render()};
+render();refresh();setInterval(()=>{render();refresh()},5*60*1000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){render();refresh()}});
+if("serviceWorker" in navigator&&location.protocol==="https:"&&!window.Capacitor){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+</script>
+</body>
+</html>
