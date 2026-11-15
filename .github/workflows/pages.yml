@@ -1,4 +1,5 @@
-# Stellt www/ auf GitHub Pages online (Web-App + plan.json).
+# Kopiert www/ bei jeder Änderung in den Branch gh-pages.
+# GitHub Pages veröffentlicht gh-pages dann automatisch (Web-App + plan.json für die Android-App).
 name: Web-App veröffentlichen
 on:
   push:
@@ -6,20 +7,17 @@ on:
     paths: ["www/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-concurrency: { group: pages, cancel-in-progress: true }
+  contents: write
+concurrency: { group: pages, cancel-in-progress: false }
 jobs:
-  deploy:
+  sync:
     runs-on: ubuntu-latest
-    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-        with: { enablement: true }
-        continue-on-error: true
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: www }
-      - id: d
-        uses: actions/deploy-pages@v4
+        with: { fetch-depth: 0 }
+      - name: www nach gh-pages
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git subtree split --prefix www -b gh-pages-neu
+          git push --force origin gh-pages-neu:gh-pages
