@@ -28,12 +28,12 @@ jobs:
       - name: APK bauen
         working-directory: android
         run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
-      - run: cp android/app/build/outputs/apk/debug/app-debug.apk Stefans-Dienste.apk
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk Dienstplan.apk
       - name: Als Release veröffentlichen
         uses: softprops/action-gh-release@v2
         with:
           tag_name: app
           name: Dienstplan – Android-App
-          body: "Installieren: Stefans-Dienste.apk auf dem Handy öffnen. Der Dienstplan aktualisiert sich danach von selbst."
+          body: "Installieren: Dienstplan.apk auf dem Handy öffnen. Der Dienstplan aktualisiert sich danach von selbst."
           make_latest: true
-          files: Stefans-Dienste.apk
+          files: Dienstplan.apk
