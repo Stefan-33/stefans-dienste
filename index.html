@@ -4,97 +4,137 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#17212b">
+<meta name="theme-color" content="#14181f">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Stefans Dienste">
-<title>Stefans Dienste</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d9480f'/%3E%3Ctext x='32' y='44' font-family='Arial' font-weight='700' font-size='34' text-anchor='middle' fill='white'%3ES%3C/text%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dienstplan">
+<title>Dienstplan</title>
+<link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: eine Spalte – Heute/Morgen gross, darunter Wochenliste, unten Monatsübersicht */
+/* Layout: dunkler Kopf mit grosser Heute-Karte, darunter helle Wochen-/Monatsansicht */
 :root{
-  --bg:#eef1f4;--surface:#fff;--surface2:#e3e8ee;--line:#cfd6de;--fg:#17212b;--muted:#5b6876;
-  --work:#d9480f;--free:#2b8a3e;--vac:#ae3ec9;--hol:#c2255c;
+  --bg:#f3f1ee;--surface:#ffffff;--surface2:#ebe8e3;--line:#e2ded7;--fg:#1b1d22;--muted:#6f6a63;
+  --head:#14181f;--headfg:#f6f3ee;--headmuted:#a7a29a;
+  --work:#e8590c;--workdeep:#c2410c;--free:#2f9e44;--vac:#9c36b5;--hol:#c2255c;
   --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root{
-  --bg:#11161c;--surface:#19212a;--surface2:#222c37;--line:#2e3a47;--fg:#e6ebf0;--muted:#93a1b0;
-  --work:#ff7a3d;--free:#5cc274;--vac:#d07be0;--hol:#f06595;color-scheme:dark}}
+  --bg:#0f1216;--surface:#181c22;--surface2:#21262e;--line:#2a3039;--fg:#eceae6;--muted:#9a958e;
+  --head:#0a0c0f;--work:#ff7a2e;--free:#51cf66;--vac:#cc5de8;--hol:#f06595;color-scheme:dark}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 var(--body);
-  padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px;padding-top:18px}
-h1,h2{font-family:var(--display);font-weight:700;margin:0;letter-spacing:.01em}
-h1{font-size:32px;line-height:1}
-h2{font-size:22px}
-.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
-.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-.stand{font-size:12.5px;color:var(--muted)}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 var(--body);-webkit-font-smoothing:antialiased}
+.gut{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.in{max-width:560px;margin:0 auto}
 
-.now{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.big{border-radius:12px;padding:14px;color:#fff;display:flex;flex-direction:column;gap:2px;min-width:0}
-.big .lbl{color:rgba(255,255,255,.85)}
-.big .t{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.05}
-.big .s{font-size:13px;opacity:.92;overflow-wrap:anywhere}
-.big.work{background:#c43d08}.big.free{background:#2b8a3e}.big.vac{background:#9c36b5}.big.hol{background:#a61e4d}.big.none{background:#5b6876}
-@media (max-width:360px){.now{grid-template-columns:1fr}}
+/* Kopf */
+.top{background:var(--head);color:var(--headfg);padding-top:calc(env(safe-area-inset-top,0px) + 18px);padding-bottom:22px;border-radius:0 0 26px 26px}
+.brand{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-weight:700;font-size:40px;line-height:.95;margin:0;letter-spacing:.005em}
+.date{color:var(--headmuted);font-size:14px;font-weight:500;margin-top:4px}
+.stand{flex:0 0 auto;font-size:11.5px;font-weight:600;color:var(--headmuted);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:4px 10px;white-space:nowrap}
 
-.seg{display:flex;gap:6px;background:var(--surface2);padding:4px;border-radius:10px}
-.seg button{flex:1;border:0;background:transparent;color:var(--muted);font:600 14px var(--body);padding:8px;border-radius:7px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+/* Heute */
+.hero{margin-top:18px;border-radius:20px;padding:18px 18px 16px;color:#fff;position:relative;overflow:hidden}
+.hero.work{background:linear-gradient(135deg,var(--work),var(--workdeep))}
+.hero.free{background:linear-gradient(135deg,#2f9e44,#237a35)}
+.hero.vac{background:linear-gradient(135deg,#ae3ec9,#862e9c)}
+.hero.hol{background:linear-gradient(135deg,#d6336c,#a61e4d)}
+.hero.none{background:#2a2f37}
+.hero .k{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.hero .big{font-family:var(--display);font-weight:700;font-size:56px;line-height:1;margin:6px 0 2px;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
+.hero .ev{font-size:15px;font-weight:600;opacity:.95;overflow-wrap:anywhere}
+.hero .st{display:inline-flex;align-items:center;gap:7px;margin-top:12px;background:rgba(0,0,0,.18);border-radius:999px;padding:5px 11px 5px 9px;font-size:13px;font-weight:700}
+.hero .st i{width:8px;height:8px;border-radius:50%;background:#fff}
+.hero .st.live i{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.hero .st.live i{animation:none}}
+.bar{height:6px;border-radius:3px;background:rgba(255,255,255,.25);margin-top:12px;overflow:hidden}
+.bar span{display:block;height:100%;background:#fff;border-radius:3px}
+
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.m{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:11px 13px;min-width:0}
+.m .k{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--headmuted)}
+.m .v{font-family:var(--display);font-size:24px;font-weight:600;line-height:1.1;margin-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m .s{font-size:12.5px;color:var(--headmuted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Umschalter */
+.seg{display:flex;gap:4px;background:var(--surface2);padding:4px;border-radius:12px;margin:18px auto 14px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font:700 14px var(--body);padding:9px;border-radius:9px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.1)}
 button:focus-visible{outline:2px solid var(--work);outline-offset:2px}
 
-.week{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.wh{display:flex;justify-content:space-between;align-items:baseline;padding:10px 14px;background:var(--surface2)}
-.day{display:grid;grid-template-columns:48px 1fr;gap:12px;padding:11px 14px;border-top:1px solid var(--line);align-items:center}
-.day.today{background:color-mix(in srgb,var(--work) 9%,var(--surface))}
-.day .d{text-align:center;font-family:var(--display);line-height:1}
-.day .d b{display:block;font-size:24px}
-.day .d span{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600}
-.day.today .d span{color:var(--work)}
-.state{display:flex;align-items:center;gap:8px;font-weight:600;min-width:0}
-.state .tm{font-family:var(--mono);font-weight:500;font-size:15px}
-.dot{flex:0 0 auto;width:10px;height:10px;border-radius:50%}
-.work .dot{background:var(--work)}.free .dot{background:var(--free)}.vac .dot{background:var(--vac)}.hol .dot{background:var(--hol)}
-.free .state,.vac .state,.hol .state{color:var(--muted)}
-.ev{font-size:13px;color:var(--muted);margin-top:1px;overflow-wrap:anywhere}
-.tag{font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--surface2);color:var(--muted)}
+/* Wochen */
+.list{display:flex;flex-direction:column;gap:22px;padding-bottom:8px}
+.wk h2{font-family:var(--body);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 2px 8px;display:flex;justify-content:space-between}
+.wk h2 span{font-weight:600;letter-spacing:0;text-transform:none}
+.days{background:var(--surface);border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(20,24,31,.05)}
+.row{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:13px 16px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .d{text-align:center;line-height:1}
+.row .d b{display:block;font-family:var(--display);font-size:26px;font-weight:600}
+.row .d span{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.row.today{background:color-mix(in srgb,var(--work) 8%,var(--surface))}
+.row.today .d span{color:var(--work)}
+.row .tm{font-family:var(--display);font-size:24px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums}
+.row .ev{font-size:13px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.row .lab{font-weight:700;font-size:15px}
+.row.off .lab{color:var(--muted);font-weight:600}
+.chip{font-size:11.5px;font-weight:800;border-radius:999px;padding:4px 10px;white-space:nowrap}
+.chip.work{background:color-mix(in srgb,var(--work) 15%,transparent);color:var(--work)}
+.chip.free{background:color-mix(in srgb,var(--free) 15%,transparent);color:var(--free)}
+.chip.vac{background:color-mix(in srgb,var(--vac) 15%,transparent);color:var(--vac)}
+.chip.hol{background:color-mix(in srgb,var(--hol) 15%,transparent);color:var(--hol)}
+.row.off{padding-top:10px;padding-bottom:10px}
+.row.off .d b{font-size:21px;color:var(--muted)}
 
-.month{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
-.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-top:8px}
-.wd{text-align:center;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase}
-.c{border-radius:6px;min-height:52px;padding:3px 1px;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface2);min-width:0}
+/* Monat */
+.mon{background:var(--surface);border-radius:18px;padding:14px 12px;box-shadow:0 1px 2px rgba(20,24,31,.05)}
+.mon h2{font-family:var(--display);font-size:24px;font-weight:700;margin:0 4px 10px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd{text-align:center;font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.05em}
+.c{border-radius:9px;min-height:54px;padding:4px 1px;display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--surface2);min-width:0}
 .c.out{background:transparent}
-.c .n{font-size:11px;font-weight:600}
-.c.today{outline:2px solid var(--fg)}
-.c .p{width:calc(100% - 4px);border-radius:4px;text-align:center;font-family:var(--mono);font-size:9.5px;line-height:1.25;color:#fff;padding:1px 0;letter-spacing:-.03em}
-.c.work .p{background:#c43d08}.c.free .p{background:transparent;color:var(--free);font-family:var(--body);font-weight:600;font-size:10px}
-.c.vac .p{background:#9c36b5;font-family:var(--body);font-size:9.5px}.c.hol .p{background:#a61e4d;font-family:var(--body);font-size:9.5px}
-.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted)}
+.c .n{font-size:11.5px;font-weight:700}
+.c.today{box-shadow:inset 0 0 0 2px var(--fg)}
+.c .p{width:calc(100% - 6px);border-radius:5px;text-align:center;font-family:var(--display);font-weight:600;font-size:11.5px;line-height:1.15;padding:2px 0;font-variant-numeric:tabular-nums}
+.c.work .p{background:var(--work);color:#fff}
+.c.free .p{color:var(--free);font-family:var(--body);font-weight:800;font-size:9.5px}
+.c.vac .p{background:var(--vac);color:#fff;font-family:var(--body);font-size:9.5px;font-weight:700}
+.c.hol .p{background:var(--hol);color:#fff;font-family:var(--body);font-size:9.5px;font-weight:700}
+.months{display:flex;flex-direction:column;gap:14px}
+
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;font-size:12.5px;color:var(--muted);font-weight:600;padding:22px 0 calc(28px + env(safe-area-inset-bottom,0px))}
 .legend span{display:flex;align-items:center;gap:6px}
-.empty{padding:16px;text-align:center;color:var(--muted)}
+.legend i{width:9px;height:9px;border-radius:50%}
+.empty{padding:22px;text-align:center;color:var(--muted);background:var(--surface);border-radius:18px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="lbl">Für Sabrina</div>
-    <h1>Stefans Dienste</h1>
-    <div class="stand">Stand des Dienstplans: <span class="num" id="stand">11.11.2026</span></div>
-  </header>
-  <section class="now" id="now" aria-label="Heute und morgen"></section>
-  <div class="seg" role="group" aria-label="Ansicht">
-    <button id="b-list" aria-pressed="true">Wochen</button>
-    <button id="b-month" aria-pressed="false">Monat</button>
+<header class="top gut">
+  <div class="in">
+    <div class="brand">
+      <div><h1>Dienstplan</h1><div class="date" id="date"></div></div>
+      <div class="stand">Stand <span id="stand">11.11.2026</span></div>
+    </div>
+    <section id="hero" aria-live="polite"></section>
+    <section class="mini" id="mini"></section>
   </div>
-  <main id="main"></main>
-  <div class="legend"><span><i class="dot" style="background:var(--work)"></i>Arbeitet</span><span><i class="dot" style="background:var(--free)"></i>Frei</span><span><i class="dot" style="background:var(--vac)"></i>Urlaub</span><span><i class="dot" style="background:var(--hol)"></i>Feiertag</span></div>
+</header>
+<div class="gut">
+  <div class="in">
+    <div class="seg" role="group" aria-label="Ansicht">
+      <button id="b-list" aria-pressed="true">Wochen</button>
+      <button id="b-month" aria-pressed="false">Monat</button>
+    </div>
+    <main id="main"></main>
+    <div class="legend"><span><i style="background:var(--work)"></i>Dienst</span><span><i style="background:var(--free)"></i>Frei</span><span><i style="background:var(--vac)"></i>Urlaub</span><span><i style="background:var(--hol)"></i>Feiertag</span></div>
+  </div>
 </div>
 <script>
 const PLAN=`01.11.2026 X
@@ -159,12 +199,13 @@ const PLAN=`01.11.2026 X
 30.12.2026 AG Ausgleich für 05.12.
 31.12.2026 FTG`;
 const STAND_ISO="2026-11-11";
-const KIND={X:["free","Frei"],AG:["free","Ausgleich"],TU:["vac","Urlaub"],FTG:["hol","Feiertag – frei"],K:["free","Frei"]};
+const KIND={X:["free","Frei"],AG:["free","Ausgleich"],TU:["vac","Urlaub"],FTG:["hol","Feiertag"],K:["free","Frei"]};
 const MON=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
 const WD=["So","Mo","Di","Mi","Do","Fr","Sa"],WDL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
 const pad=n=>String(n).padStart(2,"0"),key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const hm=s=>s.replace(/^0(\d)/,"$1");
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=id=>document.getElementById(id);
 let days={},keys=[],first="",last="";
 function load(text){
   const d={};
@@ -180,61 +221,91 @@ function load(text){
 }
 /* Plan: eingebaute Kopie -> zuletzt geladener Stand -> frisch aus dem Netz */
 const PLAN_URL="https://stefan-33.github.io/stefans-dienste/plan.json";
-function setStand(st){document.getElementById("stand").textContent=st}
-load(PLAN);
-try{const c=JSON.parse(localStorage.getItem("plan-cache")||"null");if(c&&c.plan&&c.stand>=STAND_ISO){load(c.plan);setTimeout(()=>setStand(c.standText),0)}}catch(e){}
+function setStand(st){$("stand").textContent=st.replace(/\.\d{4}$/,".")}
+load(PLAN);setStand("11.11.2026");
+try{const c=JSON.parse(localStorage.getItem("plan-cache")||"null");if(c&&c.plan&&c.stand>=STAND_ISO){load(c.plan);setStand(c.standText)}}catch(e){}
 async function refresh(){
   try{const r=await fetch(PLAN_URL+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
     if(!j.plan)return;load(j.plan);setStand(j.standText);render();
     try{localStorage.setItem("plan-cache",JSON.stringify(j))}catch(e){}
   }catch(e){}
 }
+const toMin=s=>{const[h,m]=s.split(":").map(Number);return h*60+m};
+function dur(min){const h=Math.floor(min/60),m=min%60;return h?(m?`${h} Std ${m} Min`:`${h} Std`):`${m} Min`}
+function span(e){let s=toMin(e.s),en=toMin(e.e);if(en<=s)en+=1440;return[s,en]}
+function overnight(e){return e&&e.kind==="work"&&toMin(e.e)<=toMin(e.s)}
+function dayAt(off){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);return d}
 function label(e){if(!e)return"Kein Plan";return e.kind==="work"?`${hm(e.s)}–${hm(e.e)}`:e.label}
-function overnight(e){return e&&e.kind==="work"&&e.e<e.s}
 
-function renderNow(){
-  const t=new Date(),m=new Date(t);m.setDate(t.getDate()+1);
-  const box=(d,title)=>{const e=days[key(d)];const cls=e?e.kind:"none";
-    let sub=e&&e.kind==="work"?(e.note?esc(e.note):"Dienst")+(overnight(e)&&e.e!=="00:00"?" · über Nacht":""):(e?"":"Noch kein Plan");
-    return`<div class="big ${cls}"><span class="lbl">${title} · ${WD[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.</span><span class="t ${e&&e.kind==="work"?"num":""}" style="${e&&e.kind==="work"?"font-family:var(--display)":""}">${esc(label(e))}</span><span class="s">${sub}</span></div>`};
-  document.getElementById("now").innerHTML=box(t,"Heute")+box(m,"Morgen");
+function renderHead(){
+  const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+  $("date").textContent=`${WDL[now.getDay()]}, ${now.getDate()}. ${MON[now.getMonth()]}`;
+  /* Läuft noch ein Dienst von gestern über Mitternacht? */
+  const y=days[key(dayAt(-1))];
+  let e=days[key(now)],k="Heute",st="",live=false,prog=null;
+  if(y&&overnight(y)&&nm<toMin(y.e)){e=y;k="Noch von gestern";const[s,en]=span(y);const p=nm+1440;st=`Läuft · noch ${dur(en-p)}`;live=true;prog=(p-s)/(en-s)}
+  else if(e&&e.kind==="work"){const[s,en]=span(e);
+    if(nm<s)st=`Beginnt in ${dur(s-nm)}`;
+    else if(nm<en){st=`Läuft · noch ${dur(en-nm)}`;live=true;prog=(nm-s)/(en-s)}
+    else st=`Feierabend seit ${hm(e.e)}`}
+  else if(e)st=e.kind==="vac"?"Ganzer Tag frei":e.kind==="hol"?"Feiertag – frei":"Ganzer Tag frei";
+  else st="Noch kein Plan";
+  const cls=e?e.kind:"none";
+  $("hero").innerHTML=`<div class="hero ${cls}"><div class="k">${k}</div>
+    <div class="big">${esc(label(e))}</div>
+    ${e&&e.note?`<div class="ev">${esc(e.kind==="work"?e.note:(e.code==="AG"?"Ausgleich "+e.note:e.note))}</div>`:""}
+    <div class="st ${live?"live":""}"><i></i>${esc(st)}</div>
+    ${prog!==null?`<div class="bar"><span style="width:${Math.round(prog*100)}%"></span></div>`:""}</div>`;
+  /* Morgen + nächster freier Tag bzw. nächster Dienst */
+  const tm=days[key(dayAt(1))];
+  let card2="";
+  const todayWork=e&&e.kind==="work";
+  for(let i=1;i<60;i++){const d=dayAt(i),x=days[key(d)];if(!x)continue;
+    if(todayWork&&x.kind!=="work"&&i>1){card2=`<div class="m"><div class="k">Nächster freier Tag</div><div class="v">${WDL[d.getDay()]}</div><div class="s">${d.getDate()}. ${MON[d.getMonth()]}${x.label!=="Frei"?" · "+esc(x.label):""}</div></div>`;break}
+    if(!todayWork&&x.kind==="work"&&i>1){card2=`<div class="m"><div class="k">Nächster Dienst · ${WD[d.getDay()]}</div><div class="v">${hm(x.s)}–${hm(x.e)}</div><div class="s">${d.getDate()}.${d.getMonth()+1}.${x.note?" · "+esc(x.note):""}</div></div>`;break}}
+  const d1=dayAt(1);
+  $("mini").innerHTML=`<div class="m"><div class="k">Morgen · ${WD[d1.getDay()]}</div><div class="v">${esc(label(tm))}</div><div class="s">${tm?(tm.note?esc(tm.note):tm.kind==="work"?"Dienst":"&nbsp;"):"&nbsp;"}</div></div>`+card2;
+  $("mini").style.gridTemplateColumns=card2?"1fr 1fr":"1fr";
 }
+function chip(e){if(!e)return"";if(e.kind==="work")return overnight(e)?`<span class="chip work">${e.e==="00:00"?"bis 0 Uhr":"über Nacht"}</span>`:"";
+  return e.kind==="free"?"":`<span class="chip ${e.kind}">${esc(e.label)}</span>`}
 function renderList(){
-  const t=new Date();t.setHours(0,0,0,0);const mon=new Date(t);mon.setDate(t.getDate()-((t.getDay()+6)%7));
+  const t=dayAt(0),mon=new Date(t);mon.setDate(t.getDate()-((t.getDay()+6)%7));
   let html="";
-  for(let w=0;w<8;w++){
+  for(let w=0;w<9;w++){
     const ws=new Date(mon);ws.setDate(mon.getDate()+w*7);const we=new Date(ws);we.setDate(ws.getDate()+6);
     if(key(ws)>last)break;
-    const title=w===0?"Diese Woche":w===1?"Nächste Woche":`Woche ab ${ws.getDate()}. ${MON[ws.getMonth()]}`;
+    const title=w===0?"Diese Woche":w===1?"Nächste Woche":`KW ${kw(ws)}`;
     let rows="";
-    for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);if(d<t)continue;const k=key(d),e=days[k];
-      const cls=e?e.kind:"free",today=k===key(new Date());
-      rows+=`<div class="day ${cls} ${today?"today":""}"><div class="d"><b>${d.getDate()}</b><span>${today?"Heute":WD[d.getDay()]}</span></div>
-        <div style="min-width:0"><div class="state"><i class="dot"></i>${e&&e.kind==="work"?`<span class="tm">${hm(e.s)}–${hm(e.e)}</span>${overnight(e)?`<span class="tag">${e.e==="00:00"?"bis Mitternacht":"über Nacht"}</span>`:""}`:esc(e?e.label:"Kein Plan")}</div>
-        ${e&&e.note?`<div class="ev">${esc(e.note)}</div>`:""}</div></div>`}
-    if(rows)html+=`<section class="week"><div class="wh"><h2>${title}</h2><span class="stand num">${ws.getDate()}.${ws.getMonth()+1}.–${we.getDate()}.${we.getMonth()+1}.</span></div>${rows}</section>`;
+    for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);if(d<t)continue;const k=key(d),e=days[k],today=k===key(t);
+      const work=e&&e.kind==="work";
+      rows+=`<div class="row ${work?"":"off"} ${today?"today":""}"><div class="d"><b>${d.getDate()}</b><span>${today?"Heute":WD[d.getDay()]}</span></div>
+        <div style="min-width:0">${work?`<div class="tm">${hm(e.s)} – ${hm(e.e)}</div>${e.note?`<div class="ev">${esc(e.note)}</div>`:""}`:`<div class="lab">${e?(e.code==="AG"&&e.note?"Ausgleich "+esc(e.note):esc(e.label)):"Kein Plan"}</div>`}</div>
+        ${chip(e)}</div>`}
+    if(rows)html+=`<section class="wk"><h2>${title}<span>${ws.getDate()}.${ws.getMonth()+1}. – ${we.getDate()}.${we.getMonth()+1}.</span></h2><div class="days">${rows}</div></section>`;
   }
-  return html||`<div class="empty">Für die nächsten Wochen ist noch kein Plan eingetragen.</div>`;
+  return html?`<div class="list">${html}</div>`:`<div class="empty">Für die nächsten Wochen ist noch kein Plan eingetragen.</div>`;
 }
+function kw(d){const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const n=x.getUTCDay()||7;x.setUTCDate(x.getUTCDate()+4-n);const y=new Date(Date.UTC(x.getUTCFullYear(),0,1));return Math.ceil(((x-y)/864e5+1)/7)}
 function renderMonths(){
-  const t=new Date();let html="";const start=new Date(t.getFullYear(),t.getMonth(),1);
-  for(let i=0;i<3;i++){const m=new Date(start.getFullYear(),start.getMonth()+i,1);if(key(m)>last)break;
+  const t=new Date();let html="";
+  for(let i=0;i<3;i++){const m=new Date(t.getFullYear(),t.getMonth()+i,1);if(key(m)>last)break;
     const dim=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(),lead=(m.getDay()+6)%7;
     let g=["Mo","Di","Mi","Do","Fr","Sa","So"].map(w=>`<div class="wd">${w}</div>`).join("");
     for(let j=0;j<lead;j++)g+=`<div class="c out"></div>`;
     for(let d=1;d<=dim;d++){const dt=new Date(m.getFullYear(),m.getMonth(),d),k=key(dt),e=days[k];
-      const p=!e?"":e.kind==="work"?`${hm(e.s)}<br>${hm(e.e)}`:e.kind==="vac"?"Url.":e.kind==="hol"?"FT":e.code==="AG"?"Ausgl.":"frei";
+      const p=!e?"":e.kind==="work"?`${hm(e.s)}<br>${hm(e.e)}`:e.kind==="vac"?"Urlaub":e.kind==="hol"?"Feiert.":e.code==="AG"?"Ausgl.":"frei";
       g+=`<div class="c ${e?e.kind:""} ${k===key(t)?"today":""}" title="${esc(e?(label(e)+(e.note?" · "+e.note:"")):"")}"><span class="n">${d}</span>${p?`<span class="p">${p}</span>`:""}</div>`}
-    html+=`<section class="month"><h2>${MON[m.getMonth()]} ${m.getFullYear()}</h2><div class="grid">${g}</div></section>`;
+    html+=`<section class="mon"><h2>${MON[m.getMonth()]} ${m.getFullYear()}</h2><div class="grid">${g}</div></section>`;
   }
-  return html;
+  return`<div class="months">${html}</div>`;
 }
 let view="list";
-function render(){renderNow();document.getElementById("main").innerHTML=`<div style="display:flex;flex-direction:column;gap:12px">${view==="list"?renderList():renderMonths()}</div>`;
-  document.getElementById("b-list").setAttribute("aria-pressed",view==="list");document.getElementById("b-month").setAttribute("aria-pressed",view==="month")}
-document.getElementById("b-list").onclick=()=>{view="list";render()};
-document.getElementById("b-month").onclick=()=>{view="month";render()};
-render();refresh();setInterval(()=>{render();refresh()},5*60*1000);
+function render(){renderHead();$("main").innerHTML=view==="list"?renderList():renderMonths();
+  $("b-list").setAttribute("aria-pressed",view==="list");$("b-month").setAttribute("aria-pressed",view==="month")}
+$("b-list").onclick=()=>{view="list";render()};
+$("b-month").onclick=()=>{view="month";render()};
+render();refresh();setInterval(renderHead,60*1000);setInterval(refresh,10*60*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){render();refresh()}});
 if("serviceWorker" in navigator&&location.protocol==="https:"&&!window.Capacitor){navigator.serviceWorker.register("sw.js").catch(()=>{})}
 </script>
