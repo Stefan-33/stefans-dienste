@@ -120,7 +120,7 @@ button:focus-visible{outline:2px solid var(--work);outline-offset:2px}
   <div class="in">
     <div class="brand">
       <div><h1>Dienstplan</h1><div class="date" id="date"></div></div>
-      <div class="stand">Stand <span id="stand">11.11.2026</span></div>
+      <div class="stand">Stand <span id="stand">17.11.2026</span></div>
     </div>
     <section id="hero" aria-live="polite"></section>
     <section class="mini" id="mini"></section>
@@ -174,7 +174,7 @@ const PLAN=`01.11.2026 X
 05.12.2026 09:30-15:30 All I want for Christmas
 06.12.2026 X
 07.12.2026 12:00-18:00 Aufbau Mo-Torres
-08.12.2026 07:00-13:00 Mo-Torres
+08.12.2026 07:00-13:00 Mo-Torres (gestrichen)
 09.12.2026 07:00-17:00
 10.12.2026 07:00-17:00 Hakuna Matata
 11.12.2026 TU
@@ -189,7 +189,7 @@ const PLAN=`01.11.2026 X
 20.12.2026 X
 21.12.2026 07:00-17:00
 22.12.2026 07:00-15:00 Nussknacker
-23.12.2026 10:00-18:30 Aufbau Folkwang
+23.12.2026 TU
 24.12.2026 FTG
 25.12.2026 FTG
 26.12.2026 X
@@ -198,8 +198,8 @@ const PLAN=`01.11.2026 X
 29.12.2026 AG Ausgleich für 12.12.
 30.12.2026 AG Ausgleich für 05.12.
 31.12.2026 FTG`;
-const STAND_ISO="2026-11-11";
-const APP_VERSION="202611151456";
+const STAND_ISO="2026-11-17";
+const APP_VERSION="202611171119";
 const SITE_URL="https://stefan-33.github.io/stefans-dienste/";
 const KIND={X:["free","Frei"],AG:["free","Ausgleich"],TU:["vac","Urlaub"],FTG:["hol","Feiertag"],K:["free","Frei"]};
 const MON=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
@@ -224,7 +224,7 @@ function load(text){
 /* Plan: eingebaute Kopie -> zuletzt geladener Stand -> frisch aus dem Netz */
 const PLAN_URL="https://stefan-33.github.io/stefans-dienste/plan.json";
 function setStand(st){$("stand").textContent=st.replace(/\.\d{4}$/,".")}
-load(PLAN);setStand("11.11.2026");
+load(PLAN);setStand("17.11.2026");
 try{const c=JSON.parse(localStorage.getItem("plan-cache")||"null");if(c&&c.plan&&c.stand>=STAND_ISO){load(c.plan);setStand(c.standText)}}catch(e){}
 async function refresh(){
   try{const r=await fetch(PLAN_URL+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
