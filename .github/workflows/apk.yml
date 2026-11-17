@@ -4,7 +4,7 @@ name: Android-App bauen
 on:
   push:
     branches: [main]
-    paths: ["www/index.html", "capacitor.config.json", "package.json", "assets/**", "signing/**", ".github/workflows/apk.yml"]
+    paths: ["www/app-version.txt", "capacitor.config.json", "package.json", "assets/**", "signing/**", ".github/workflows/apk.yml"]
   workflow_dispatch:
 permissions:
   contents: write
