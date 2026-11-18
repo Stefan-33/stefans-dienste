@@ -120,7 +120,7 @@ button:focus-visible{outline:2px solid var(--work);outline-offset:2px}
   <div class="in">
     <div class="brand">
       <div><h1>Dienstplan</h1><div class="date" id="date"></div></div>
-      <div class="stand">Stand <span id="stand">17.11.2026</span></div>
+      <div class="stand">Stand <span id="stand">18.11.2026</span></div>
     </div>
     <section id="hero" aria-live="polite"></section>
     <section class="mini" id="mini"></section>
@@ -161,7 +161,7 @@ const PLAN=`01.11.2026 X
 22.11.2026 X
 23.11.2026 TU BHM IT Tag
 24.11.2026 07:00-18:00 Personalversammlung Mülheim
-25.11.2026 07:00-15:00 Jobcenter
+25.11.2026 TU
 26.11.2026 07:00-13:00 Jobcenter
 27.11.2026 07:00-17:00
 28.11.2026 X
@@ -198,7 +198,7 @@ const PLAN=`01.11.2026 X
 29.12.2026 AG Ausgleich für 12.12.
 30.12.2026 AG Ausgleich für 05.12.
 31.12.2026 FTG`;
-const STAND_ISO="2026-11-17";
+const STAND_ISO="2026-11-18";
 const APP_VERSION="202611151456";
 const SITE_URL="https://stefan-33.github.io/stefans-dienste/";
 const KIND={X:["free","Frei"],AG:["free","Ausgleich"],TU:["vac","Urlaub"],FTG:["hol","Feiertag"],K:["free","Frei"]};
@@ -224,7 +224,7 @@ function load(text){
 /* Plan: eingebaute Kopie -> zuletzt geladener Stand -> frisch aus dem Netz */
 const PLAN_URL="https://stefan-33.github.io/stefans-dienste/plan.json";
 function setStand(st){$("stand").textContent=st.replace(/\.\d{4}$/,".")}
-load(PLAN);setStand("17.11.2026");
+load(PLAN);setStand("18.11.2026");
 try{const c=JSON.parse(localStorage.getItem("plan-cache")||"null");if(c&&c.plan&&c.stand>=STAND_ISO){load(c.plan);setStand(c.standText)}}catch(e){}
 async function refresh(){
   try{const r=await fetch(PLAN_URL+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
