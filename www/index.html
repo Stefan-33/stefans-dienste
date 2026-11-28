@@ -120,7 +120,7 @@ button:focus-visible{outline:2px solid var(--work);outline-offset:2px}
   <div class="in">
     <div class="brand">
       <div><h1>Dienstplan</h1><div class="date" id="date"></div></div>
-      <div class="stand">Stand <span id="stand">24.11.2026</span></div>
+      <div class="stand">Stand <span id="stand">28.11.2026</span></div>
     </div>
     <section id="hero" aria-live="polite"></section>
     <section class="mini" id="mini"></section>
@@ -166,7 +166,7 @@ const PLAN=`01.11.2026 X
 27.11.2026 07:00-17:00
 28.11.2026 X
 29.11.2026 06:00-13:45 Kreativmarkt · Ruhrpreis · Candlelight
-30.11.2026 AG Ausgleich für 29.11. · AR-Sitzung MST
+30.11.2026 10:00-19:30 AR-Sitzung MST · Amt für Stadtplanung
 01.12.2026 07:00-17:00
 02.12.2026 07:00-15:00 Netzwerktreffen medizinisch
 03.12.2026 12:30-18:30 Herbert Knebel
@@ -198,7 +198,7 @@ const PLAN=`01.11.2026 X
 29.12.2026 AG Ausgleich für 12.12.
 30.12.2026 AG Ausgleich für 05.12.
 31.12.2026 FTG`;
-const STAND_ISO="2026-11-24";
+const STAND_ISO="2026-11-28";
 const APP_VERSION="202611151456";
 const SITE_URL="https://stefan-33.github.io/stefans-dienste/";
 const KIND={X:["free","Frei"],AG:["free","Ausgleich"],TU:["vac","Urlaub"],FTG:["hol","Feiertag"],K:["free","Frei"]};
@@ -224,7 +224,7 @@ function load(text){
 /* Plan: eingebaute Kopie -> zuletzt geladener Stand -> frisch aus dem Netz */
 const PLAN_URL="https://stefan-33.github.io/stefans-dienste/plan.json";
 function setStand(st){$("stand").textContent=st.replace(/\.\d{4}$/,".")}
-load(PLAN);setStand("24.11.2026");
+load(PLAN);setStand("28.11.2026");
 try{const c=JSON.parse(localStorage.getItem("plan-cache")||"null");if(c&&c.plan&&c.stand>=STAND_ISO){load(c.plan);setStand(c.standText)}}catch(e){}
 async function refresh(){
   try{const r=await fetch(PLAN_URL+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
